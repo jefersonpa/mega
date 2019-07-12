@@ -1,0 +1,177 @@
+[
+  {
+    "index": 0,
+    "genreIndex": 1,
+    "title": "Watchmen",
+    "plot": "In 1985 where former superheroes exist, the murder of a colleague sends active vigilante Rorschach into his own sprawling investigation, uncovering something that could completely change the course of history as we know it.",
+    "year": 2009
+  },
+  {
+    "index": 1,
+    "genreIndex": 1,
+    "title": "Shazam!",
+    "plot": "We all have a superhero inside us, it just takes a bit of magic to bring it out. In Billy Batson's case, by shouting out one word - SHAZAM. - this streetwise fourteen-year-old foster kid can turn into the grown-up superhero Shazam.",
+    "year": 2019
+  },
+  {
+    "index": 2,
+    "genreIndex": 2,
+    "title": "GoldenEye",
+    "plot": "James Bond teams up with the lone survivor of a destroyed Russian research center to stop the hijacking of a nuclear space weapon by a fellow Agent formerly believed to be dead.",
+    "year": 1995
+  },
+  {
+    "index": 3,
+    "genreIndex": 2,
+    "title": "Mission: Impossible",
+    "plot": "An American agent, under false suspicion of disloyalty, must discover and expose the real spy without the help of his organization.",
+    "year": 1996
+  },
+  {
+    "index": 4,
+    "genreIndex": 4,
+    "title": "50 First Dates",
+    "plot": "Henry Roth is a man afraid of commitment up until he meets the beautiful Lucy. They hit it off and Henry think he's finally found the girl of his dreams, until he discovers she has short-term memory loss and forgets him the next day.",
+    "year": 2004
+  },
+  {
+    "index": 5,
+    "genreIndex": 4,
+    "title": "Just Go with It",
+    "plot": "On a weekend trip to Hawaii, a plastic surgeon convinces his loyal assistant to pose as his soon-to-be-divorced wife in order to cover up a careless lie he told to his much-younger girlfriend.",
+    "year": 2011
+  },
+  {
+    "index": 6,
+    "genreIndex": 5,
+    "title": "Shaun of the Dead",
+    "plot": "A man's uneventful life is disrupted by the zombie apocalypse.",
+    "year": 2004
+  },
+  {
+    "index": 7,
+    "genreIndex": 5,
+    "title": "The World's End",
+    "plot": "Five friends who reunite in an attempt to top their epic pub crawl from twenty years earlier unwittingly become humanity's only hope for survival.",
+    "year": 2013
+  },
+  {
+    "index": 8,
+    "genreIndex": 6,
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "plot": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
+    "year": 2001
+  },
+  {
+    "index": 9,
+    "genreIndex": 6,
+    "title": "The Lord of the Rings: The Two Towers",
+    "plot": "While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.",
+    "year": 2002
+  },
+  {
+    "index": 10,
+    "genreIndex": 6,
+    "title": "The Lord of the Rings: The Return of the King",
+    "plot": "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.",
+    "year": 2003
+  },
+  {
+    "index": 11,
+    "genreIndex": 8,
+    "title": "Poltergeist",
+    "plot": "A family whose suburban home is haunted by evil forces must come together to rescue their youngest daughter after the apparitions take her captive.",
+    "year": 2015
+  },
+  {
+    "index": 12,
+    "genreIndex": 8,
+    "title": "It",
+    "plot": "In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.",
+    "year": 2017
+  },
+  {
+    "index": 13,
+    "genreIndex": 8,
+    "title": "The Autopsy of Jane Doe",
+    "plot": "A father and son, both coroners, are pulled into a complex mystery while attempting to identify the body of a young woman, who was apparently harboring dark secrets.",
+    "year": 2016
+  },
+  {
+    "index": 14,
+    "genreIndex": 9,
+    "title": "Gremlins",
+    "plot": "A boy inadvertently breaks three important rules concerning his new pet and unleashes a horde of malevolently mischievous monsters on a small town.",
+    "year": 1984
+  },
+  {
+    "index": 15,
+    "genreIndex": 9,
+    "title": "A Quiet Place",
+    "plot": "In a post-apocalyptic world, a family is forced to live in silence while hiding from monsters with ultra-sensitive hearing.",
+    "year": 2018
+  },
+  {
+    "index": 16,
+    "genreIndex": 9,
+    "title": "Cloverfield",
+    "plot": "A group of friends venture deep into the streets of New York on a rescue mission during a rampaging monster attack.",
+    "year": 2008
+  },
+  {
+    "index": 17,
+    "genreIndex": 10,
+    "title": "Don't Breathe",
+    "plot": "Hoping to walk away with a massive fortune, a trio of thieves break into the house of a blind man who isn't as helpless as he seems.",
+    "year": 2016
+  },
+  {
+    "index": 18,
+    "genreIndex": 10,
+    "title": "Saw",
+    "plot": "Two strangers, who awaken in a room with no recollection of how they got there, soon discover they're pawns in a deadly game perpetrated by a notorious serial killer.",
+    "year": 2004
+  },
+  {
+    "index": 19,
+    "genreIndex": 10,
+    "title": "Scream",
+    "plot": "A year after the murder of her mother, a teenage girl is terrorized by a new killer, who targets the girl and her friends by using horror films as part of a deadly game.",
+    "year": 1996
+  },
+  {
+    "index": 20,
+    "genreIndex": 10,
+    "title": "Hostel",
+    "plot": "Three backpackers head to a Slovak city that promises to meet their hedonistic expectations, with no idea of the hell that awaits them.",
+    "year": 2005
+  },
+  {
+    "index": 21,
+    "genreIndex": 11,
+    "title": "Kubo and the Two Strings",
+    "plot": "A young boy named Kubo must locate a magical suit of armour worn by his late father in order to defeat a vengeful spirit from the past.",
+    "year": 2016
+  },
+  {
+    "index": 22,
+    "genreIndex": 11,
+    "title": "The Iron Giant",
+    "plot": "A young boy befriends a giant robot from outer space that a paranoid government agent wants to destroy.",
+    "year": 1999
+  },
+  {
+    "index": 23,
+    "genreIndex": 11,
+    "title": "The Nightmare Before Christmas",
+    "plot": "Jack Skellington, king of Halloween Town, discovers Christmas Town, but his attempts to bring Christmas to his home causes confusion.",
+    "year": 1993
+  },
+  {
+    "index": 24,
+    "genreIndex": 11,
+    "title": "Sen to Chihiro no kamikakushi",
+    "plot": "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.",
+    "year": 2001
+  }
+]

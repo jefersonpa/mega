@@ -1,0 +1,178 @@
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50px;
+  width: 100%;
+  box-sizing: border-box;
+  background-image: linear-gradient(to right, $cor-primaria, $cor-secundaria);
+  z-index: 9999 !important;
+
+  // Container para a posição horizontal da logo
+  padding: 0 255px;
+  @media (max-width: $breakpoint-xl) {
+    padding: 0 173px;
+  }
+  @media (max-width: $breakpoint-lg) {
+    padding: 0 91px;
+  }
+  @media (max-width: $breakpoint-md) {
+    padding: 0 10px;
+  }
+  @media (min-width: $breakpoint-md) {
+    height: 100px;
+  }
+}
+
+header .logo {
+  color: #fff;
+  height: 40px;
+  line-height: 50px;
+  font-size: 24px;
+  float: left;
+  font-weight: bold;
+
+  // centraliza verticalmente
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+
+  // Acima da resolução de celular a logo aumenta
+  @media (min-width: $breakpoint-md) {
+    height: 50px;
+  }
+}
+
+header nav {
+  float: right;
+  @media (min-width: $breakpoint-md) {
+    // centraliza verticalmente
+    position: absolute;
+    top: 50%;
+    right: 0;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  // Padding a direita para os botões, em celular é 0
+  padding-right: 255px;
+  @media (max-width: $breakpoint-xl) {
+    padding-right: 173px;
+  }
+  @media (max-width: $breakpoint-lg) {
+    padding-right: 91px;
+  }
+  @media (max-width: $breakpoint-md) {
+    padding-right: 0;
+  }
+}
+
+header nav ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+header nav ul li {
+  list-style: none;
+  position: relative;
+}
+
+header nav ul li.sub-menu:before {
+  content: '\f078';
+  font-family: fontAwesome;
+  position: absolute;
+  line-height: 50px;
+  color: #fff;
+  right: 1px;
+}
+
+header nav ul li.active.sub-menu:before {
+  content: '\f077';
+}
+
+header nav ul li ul {
+  position: absolute;
+  left: 0;
+  background: #333;
+  display: none;
+}
+
+header nav ul li.active ul {
+  /* use li: hover instead */
+  display: block;
+}
+
+header nav ul li ul li {
+  display: block;
+  width: 200px;
+}
+
+header nav ul li a {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+header nav ul li a:hover {
+  color: #fff;
+  background: $cor-primaria;
+}
+
+header nav ul li a.active {
+  background: $cor-primaria;
+}
+
+.menu-toggle {
+  color: #fff;
+  float: right;
+  line-height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+}
+
+.icon {
+  color: #fff;
+}
+
+@media (max-width: $breakpoint-md) {
+  header {
+    padding: 0 20px;
+  }
+  .menu-toggle {
+    display: block;
+  }
+  header nav {
+    /* use display none or left:-100% to hide the nav  */
+    /* display: none; */
+    position: absolute;
+    top: 50px;
+    left: -100%;
+    width: 100%;
+    height: calc(100vh - 50px);
+    background: #333;
+    transition: 0.5s;
+  }
+  header nav.active {
+    left: 0;
+  }
+  header nav ul {
+    display: block;
+    text-align: center;
+  }
+  header nav ul li a {
+    border-bottom: 0.9px solid rgba(0, 0, 0, 0.2);
+  }
+  header nav ul li.active ul {
+    position: relative;
+    background: $cor-primaria;
+  }
+  header nav ul li ul li {
+    width: 100%;
+  }
+}
