@@ -1,24 +1,24 @@
 // Abstracts
-@import "abstracts/_cores";
-@import "abstracts/_breakpoints";
+@import 'abstracts/_cores';
+@import 'abstracts/_breakpoints';
 
 // Base
-@import "base/_normalize";
-@import "base/_fontes";
+@import 'base/_normalize';
+@import 'base/_fontes';
 
 // Layout
-@import "layout/_container";
+@import 'layout/_container';
 
 // Componentes
 // @import 'components/_avatar';
-@import "components/_botao";
+@import 'components/_botao';
 // @import "components/_cards-dashboard";
 // @import "components/_formulario";
 // @import "components/_pagina-cabecalho";
 // @import "components/_pagina-conteudo";
 // @import "components/_document-editor";
 
-@import "components/_all-pages";
+@import 'components/_all-pages';
 
 // Páginas
 

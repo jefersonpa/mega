@@ -1,20 +1,12 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent } from '@material-ui/core';
+import MuiTreeView from 'material-ui-treeview';
+import MaterialTable from 'material-table';
+import { Link } from 'react-router-dom';
+
 // import { notify } from "react-notify-toast";
-import Button from "@material-ui/core/Button";
-import { Paper } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-
 // import SweetAlert from "sweetalert-react";
-import Icon from "@material-ui/core/Icon";
-
-import MaterialTable from "material-table";
-import { Link } from "react-router-dom";
-
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import MuiTreeView from "material-ui-treeview";
 
 // import CategoriaService from "../../services/categoria-service";
 
@@ -33,51 +25,34 @@ class Movies extends Component {
       idToDelete: 0,
       categorias: [],
       openModal: false,
-      categoria_descricao: "",
-      campo_descricao_error: "",
-      title: "",
+      categoria_descricao: '',
+      campo_descricao_error: '',
+      title: '',
       genres2: [
         {
-          value: "Parent A",
-          nodes: [{ value: "Child A" }, { value: "Child B" }]
+          value: 'Parent A',
+          nodes: [{ value: 'Child A' }, { value: 'Child B' }]
         },
         {
-          value: "Parent B",
+          value: 'Parent B',
           nodes: [
             {
-              value: "Child C"
+              value: 'Child C'
             },
             {
-              value: "Parent C",
-              nodes: [{ value: "Child D" }, { value: "Child E" }, { value: "Child F" }]
+              value: 'Parent C',
+              nodes: [{ value: 'Child D' }, { value: 'Child E' }, { value: 'Child F' }]
             }
           ]
         },
         {
-          value: "Parent H"
+          value: 'Parent H'
         }
       ],
-      genres: []
+      genres: [],
+      titles: [],
+      titles_selected: []
     };
-
-    // [
-    //   {
-    //     value: "Parent A",
-    //     nodes: [{ value: "Child A" }, { value: "Child B" }]
-    //   },
-    //   {
-    //     value: "Parent B",
-    //     nodes: [
-    //       {
-    //         value: "Child C"
-    //       },
-    //       {
-    //         value: "Parent C",
-    //         nodes: [{ value: "Child D" }, { value: "Child E" }, { value: "Child F" }]
-    //       }
-    //     ]
-    //   }
-    // ]
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.handleExcluirClick = this.handleExcluirClick.bind(this);
@@ -85,71 +60,37 @@ class Movies extends Component {
     this.handleClickOpen = this.handleClickOpen.bind(this);
   }
 
-  // Função recursiva para popular o tree
-  populate(data, parentIndex) {
-    // Verifica se o id do parente é igual ao pesquisado
-    // E verifica se o id não é igual ao pesquisado (gera erro de loop infinito util.inspect())
-    const children = data.filter(each => each.parentIndex === parentIndex && each.parentIndex !== each.index);
-    children.forEach(child => {
-      child.nodes = this.populate(data, child.id);
-    });
-    return children;
-  }
-
   componentDidMount() {
-    var titles = require("../../assets/data/titles.json");
-    var a = require("../../assets/data/genres.json");
+    var titles = require('../../assets/data/titles.json');
+    var all_genres = require('../../assets/data/genres.json');
 
     let genres = [];
 
-    for (let i = 0; i < a.length; i++) {
-      a[i].value = a[i].genre;
+    for (let i = 0; i < all_genres.length; i++) {
+      all_genres[i].value = all_genres[i].genre;
     }
 
-    let c = [];
-
-    a.forEach(element => {
+    all_genres.forEach(genre => {
       // filtra os do começo da árvore
-      if (element.parentIndex == -1 || element.parentIndex == element.index) {
-        element.nodes = this.populate(a, element.index);
-        c.push(element);
-        return element;
+      if (genre.parentIndex === -1 || genre.parentIndex === genre.index) {
+        genre.nodes = this.populate(all_genres, genre.index);
+        genres.push(genre);
+        return genre;
       }
     });
 
-    // for (let i = 0; i < a.length; i++) {}
+    this.setState({ genres, titles });
+  }
 
-    // for (let i = 0; i < a.length; i++) {
-    //   let b = a.filter(x => x.parentIndex === a[i].index); // Procura em todos
-
-    //   if (b.length > 0) {
-    //     a[i].nodes = b;
-    //     genres.push(a);
-    //   }
-    // }
-
-    // for (let i = 0; i < a.length; i++) {
-    //   if (a[i].parentIndex === -1) {
-    //     let b = a.filter(x => x.parentIndex === a[i].index);
-    //     console.log(a[i]);
-    //     console.log(b);
-
-    //     a[i].nodes = b;
-
-    //     genres.push(a);
-    //   }
-    // }
-
-    this.setState({ genres: c });
-
-    // CategoriaService.getList(
-    //   output => {
-    //     this.setState({
-    //       categorias: output
-    //     });
-    //   },
-    //   () => {}
-    // );
+  // Função recursiva para popular o tree
+  populate(all_genres, parentIndex) {
+    // Verifica se o id do parente é igual ao pesquisado
+    // E verifica se o id não é igual ao pesquisado (gera erro de loop infinito util.inspect())
+    const children = all_genres.filter(genre => genre.parentIndex === parentIndex && genre.parentIndex !== genre.index);
+    children.forEach(child => {
+      child.nodes = this.populate(all_genres, child.id);
+    });
+    return children;
   }
 
   handleClickOpen = id => () => {
@@ -172,10 +113,6 @@ class Movies extends Component {
     //   this.setState({ categoria_descricao: "" });
     // }
     // this.setState({ openModal: true });
-  };
-
-  handleCloseModal = () => {
-    this.setState({ openModal: false });
   };
 
   handleExcluirClick = categoria_id => () => {
@@ -220,12 +157,12 @@ class Movies extends Component {
     tempData.categoria_descricao = this.state.categoria_descricao;
 
     this.setState({
-      campo_descricao_error: ""
+      campo_descricao_error: ''
     });
 
-    if (this.state.categoria_descricao === "") {
+    if (this.state.categoria_descricao === '') {
       this.setState({
-        campo_descricao_error: "Este campo é obrigatório!"
+        campo_descricao_error: 'Este campo é obrigatório!'
       });
       has_error = true;
     }
@@ -236,7 +173,7 @@ class Movies extends Component {
       return;
     }
 
-    if (tempData.categoria_id == undefined) {
+    if (tempData.categoria_id === undefined) {
       //   CategoriaService.save(
       //     tempData,
       //     res => {
@@ -277,7 +214,7 @@ class Movies extends Component {
   };
 
   render() {
-    const { categorias, categoria_descricao, campo_descricao_error, title, genres } = this.state;
+    const { categorias, categoria_descricao, campo_descricao_error, genres } = this.state;
     const { classes } = this.props;
 
     return (
@@ -285,7 +222,7 @@ class Movies extends Component {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <Paper className="paper">
-              <MuiTreeView tree={genres} />
+              <MuiTreeView tree={genres} style={{ padding: 0 }} />
             </Paper>
           </Grid>
 
@@ -305,51 +242,51 @@ class Movies extends Component {
                 }}
                 localization={{
                   pagination: {
-                    labelDisplayedRows: "{from}-{to} de {count}", // {from}-{to} of {count}
-                    labelRowsPerPage: "Registros por página:", // Rows per page:
-                    firstAriaLabel: "Primeira Página", // First Page
-                    firstTooltip: "Primeira página", // First Page
-                    previousAriaLabel: "Página Anterior", // Previous Page
-                    previousTooltip: "Página Anterior", // Previous Page
-                    nextAriaLabel: "Próxima Página", // Next Page
-                    nextTooltip: "Próxima Página", // Next Page
-                    lastAriaLabel: "Última Página", // Last Page
-                    lastTooltip: "Última Página" // Last Page
+                    labelDisplayedRows: '{from}-{to} de {count}', // {from}-{to} of {count}
+                    labelRowsPerPage: 'Registros por página:', // Rows per page:
+                    firstAriaLabel: 'Primeira Página', // First Page
+                    firstTooltip: 'Primeira página', // First Page
+                    previousAriaLabel: 'Página Anterior', // Previous Page
+                    previousTooltip: 'Página Anterior', // Previous Page
+                    nextAriaLabel: 'Próxima Página', // Next Page
+                    nextTooltip: 'Próxima Página', // Next Page
+                    lastAriaLabel: 'Última Página', // Last Page
+                    lastTooltip: 'Última Página' // Last Page
                   },
                   toolbar: {
-                    searchTooltip: "Pesquisar" // Search
+                    searchTooltip: 'Pesquisar' // Search
                   },
                   header: {
-                    actions: "Ações" // Actions
+                    actions: 'Ações' // Actions
                   },
                   body: {
-                    emptyDataSourceMessage: "Nenhum registro disponível" // No records to display
+                    emptyDataSourceMessage: 'Nenhum registro disponível' // No records to display
                   }
                 }}
                 columns={[
                   {
-                    title: "Title",
-                    field: "title",
+                    title: 'Title',
+                    field: 'title',
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
+                    cellStyle: { fontSize: '16px' }
                   },
                   {
-                    title: "Plot",
-                    field: "plot",
+                    title: 'Plot',
+                    field: 'plot',
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
+                    cellStyle: { fontSize: '16px' }
                   },
                   {
-                    title: "Year",
-                    field: "year",
+                    title: 'Year',
+                    field: 'year',
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
+                    cellStyle: { fontSize: '16px' }
                   },
                   {
-                    title: "Actions",
-                    field: "actions",
+                    title: 'Actions',
+                    field: 'actions',
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
+                    cellStyle: { fontSize: '16px' }
                   }
                 ]}
                 data={categorias.map(item => {
@@ -362,23 +299,23 @@ class Movies extends Component {
                         <Button
                           variant="contained"
                           type="button"
-                          title={"Editar"}
-                          className={"botao__editar"}
+                          title={'Editar'}
+                          className={'botao__editar'}
                           onClick={this.handleClickOpen(item.categoria_id)}
                         >
                           <Icon>edit</Icon>
                         </Button>
 
                         <Button
-                          title={"Deletar"}
-                          className={"botao__excluir"}
+                          title={'Deletar'}
+                          className={'botao__excluir'}
                           variant="contained"
                           onClick={this.handleExcluirClick(item.categoria_id)}
                         >
                           <Icon>delete</Icon>
                         </Button>
-                        <Link className="link" to={"/dashboard/subcategorias/" + item.categoria_id}>
-                          <Button title={"Subcategorias"} className={"botao__primario"} variant="contained">
+                        <Link className="link" to={'/dashboard/subcategorias/' + item.categoria_id}>
+                          <Button title={'Subcategorias'} className={'botao__primario'} variant="contained">
                             <Icon>list</Icon>
                           </Button>
                         </Link>
@@ -394,7 +331,7 @@ class Movies extends Component {
 
         <Dialog
           open={this.state.openModal}
-          onClose={this.handleCloseModal}
+          onClose={() => this.setState({ openModal: false })}
           scroll={this.state.scroll}
           aria-labelledby="scroll-dialog-title"
           maxWidth="md"
@@ -407,7 +344,7 @@ class Movies extends Component {
                   <Grid item xs={12}>
                     <h1>Categoria</h1>
                   </Grid>
-                  <Grid container spacing={16} direction={"row"}>
+                  <Grid container spacing={16} direction={'row'}>
                     <Grid item xs={12}>
                       <TextField
                         id="outlined-descricao"
@@ -417,11 +354,11 @@ class Movies extends Component {
                         variant="outlined"
                         value={categoria_descricao}
                         helperText={campo_descricao_error}
-                        error={campo_descricao_error == "" ? false : true}
+                        error={campo_descricao_error === '' ? false : true}
                         required={true}
                         name="categoria_descricao"
                         onChange={event => {
-                          this.handleChange("categoria_descricao", event.target.value);
+                          this.handleChange('categoria_descricao', event.target.value);
                         }}
                       />
                     </Grid>
@@ -432,7 +369,7 @@ class Movies extends Component {
                           color="primary"
                           type="button"
                           variant="contained"
-                          className={"botao__salvar"}
+                          className={'botao__salvar'}
                           onClick={this.onClick}
                         >
                           <i className="material-icons">done</i> Salvar
@@ -442,7 +379,7 @@ class Movies extends Component {
                           color="primary"
                           type="button"
                           variant="contained"
-                          className={"botao__cancelar"}
+                          className={'botao__cancelar'}
                           onClick={this.onClickCancel}
                         >
                           <i className="material-icons">exit_to_app</i> Cancelar

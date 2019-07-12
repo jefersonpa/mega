@@ -1,8 +1,8 @@
-import { Route, Switch, HashRouter, Redirect } from "react-router-dom";
-import React from "react";
-import "./App.css";
+import { Route, Switch, HashRouter } from 'react-router-dom';
+import React from 'react';
+import './App.css';
 
-import Movies from "../movies/Movies.jsx";
+import Movies from '../movies/Movies.jsx';
 
 function App() {
   return (
