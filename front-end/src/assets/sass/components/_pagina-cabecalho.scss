@@ -1,0 +1,41 @@
+.pagina-cabecalho {
+  background-color: #FF8C00;
+  background-repeat: repeat-x;
+  background-size: auto !important;
+  background-position: top center;
+  height: 100%;
+  width: 100%;
+
+  background-attachment: fixed;
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  
+  filter: blur(1.2px);
+  -webkit-filter: blur(1.2px);
+  z-index: -2;
+}
+  
+.pagina-titulo {
+  position: relative;
+  bottom: 10px;
+  right: 0;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 30px #000;
+  z-index: -1;
+}
+
+.pagina-relative {
+  padding-top: 140px;
+  padding-bottom: 40px;
+  @media (min-width: $breakpoint-sm) {
+    padding-top: 190px;
+    padding-bottom: 90px;
+  }
+  position: relative;
+  height: auto;
+  width: auto;
+}

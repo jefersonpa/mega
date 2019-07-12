@@ -1,0 +1,139 @@
+.document-editor {
+  border: 1px solid var(--ck-color-base-border) !important;
+  border-radius: var(--ck-border-radius) !important;
+
+  /* Set vertical boundaries for the document editor. */
+  height: 100% !important;
+  margin: 0 0 0 0 !important;
+
+  /* This element is a flex container for easier rendering. */
+  display: flex !important;
+  flex-flow: column nowrap !important;
+}
+
+.document-editor p {
+  text-align: left;
+  margin: 30px 0 30px 0;
+}
+
+.document-editor__toolbar {
+  /* Make sure the toolbar container is always above the editable. */
+  z-index: 1 !important;
+  /* Create the illusion of the toolbar floating over the editable. */
+  box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.2) !important;
+
+  /* Use the CKEditor CSS variables to keep the UI consistent. */
+  border-bottom: 1px solid var(--ck-color-toolbar-border) !important;
+}
+
+/* Adjust the look of the toolbar inside the container. */
+.document-editor__toolbar .ck-toolbar {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+/* Make the editable container look like the inside of a native word processor application. */
+.document-editor__editable-container {
+  padding: calc(2 * var(--ck-spacing-large)) !important;
+  background: var(--ck-color-base-foreground) !important;
+
+  /* Make it possible to scroll the "page" of the edited content. */
+  overflow-y: scroll !important; //????
+  max-height: 800px !important; //????
+}
+
+.document-editor__editable-container .ck-editor__editable {
+  /* Set the dimensions of the "page". */
+  // width: 15.8cm;
+  min-height: 21cm !important;
+  width: 100% !important;
+
+  /* Keep the "page" off the boundaries of the container. */
+  padding: 1cm 2cm 2cm !important;
+
+  border: 1px hsl(0, 0%, 82.7%) solid !important;
+  border-radius: var(--ck-border-radius) !important;
+  background: white !important;
+
+  /* The "page" should cast a slight shadow (3D illusion). */
+  box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.1) !important;
+
+  /* Center the "page". */
+  margin: 0 auto !important;
+}
+/* Set the default font for the "page" of the content. */
+.document-editor .ck-content,
+.document-editor .ck-heading-dropdown .ck-list .ck-button__label {
+  font: 16px/1.6 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+/* Adjust the headings dropdown to host some larger heading styles. */
+.document-editor .ck-heading-dropdown .ck-list .ck-button__label {
+  line-height: calc(1.7 * var(--ck-line-height-base) * var(--ck-font-size-base)) !important;
+  min-width: 6em !important;
+}
+
+/* Scale down all heading previews because they are way too big to be presented in the UI.
+Preserve the relative scale, though. */
+.document-editor .ck-heading-dropdown .ck-list .ck-button:not(.ck-heading_paragraph) .ck-button__label {
+  transform: scale(0.8) !important;
+  transform-origin: left !important;
+}
+
+/* Set the styles for "Heading 1". */
+.document-editor .ck-content h2,
+.document-editor .ck-heading-dropdown .ck-heading_heading1 .ck-button__label {
+  font-size: 2.18em !important;
+  font-weight: normal !important;
+}
+
+.document-editor .ck-content h2 {
+  line-height: 1.37em !important;
+  padding-top: 0.342em !important;
+  margin-bottom: 0.142em !important;
+}
+
+/* Set the styles for "Heading 2". */
+.document-editor .ck-content h3,
+.document-editor .ck-heading-dropdown .ck-heading_heading2 .ck-button__label {
+  font-size: 1.75em !important;
+  font-weight: normal !important;
+  color: hsl(203, 100%, 50%) !important;
+}
+
+.document-editor .ck-heading-dropdown .ck-heading_heading2.ck-on .ck-button__label {
+  color: var(--ck-color-list-button-on-text) !important;
+}
+
+/* Set the styles for "Heading 2". */
+.document-editor .ck-content h3 {
+  line-height: 1.86em !important;
+  padding-top: 0.171em !important;
+  margin-bottom: 0.357em !important;
+}
+
+/* Set the styles for "Heading 3". */
+.document-editor .ck-content h4,
+.document-editor .ck-heading-dropdown .ck-heading_heading3 .ck-button__label {
+  font-size: 1.31em !important;
+  font-weight: bold !important;
+}
+
+.document-editor .ck-content h4 {
+  line-height: 1.24em !important;
+  padding-top: 0.286em !important;
+  margin-bottom: 0.952em !important;
+}
+
+/* Set the styles for "Paragraph". */
+.document-editor .ck-content p {
+  font-size: 1em !important;
+  line-height: 1.63em !important;
+  padding-top: 0.5em !important;
+  margin-bottom: -1.8em !important;
+  color: hsl(0, 0%, 0%) !important;
+}
+/* Make the block quoted text serif with some additional spacing. */
+.document-editor .ck-content blockquote {
+  font-family: Georgia, serif;
+  margin-left: calc(2 * var(--ck-spacing-large)) !important;
+  margin-right: calc(2 * var(--ck-spacing-large)) !important;
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "index": 0,
+    "parentIndex": -1,
+    "genre": "Ação",
+    "hasMovie": false
+  },
+  {
+    "index": 1,
+    "parentIndex": 0,
+    "genre": "Herói",
+    "hasMovie": true
+  },
+  {
+    "index": 2,
+    "parentIndex": 0,
+    "genre": "Espião",
+    "hasMovie": true
+  },
+  {
+    "index": 3,
+    "parentIndex": -1,
+    "genre": "Comédia",
+    "hasMovie": false
+  },
+  {
+    "index": 4,
+    "parentIndex": 3,
+    "genre": "Romântica",
+    "hasMovie": true
+  },
+  {
+    "index": 5,
+    "parentIndex": 3,
+    "genre": "Comédia de Terror",
+    "hasMovie": true
+  },
+  {
+    "index": 6,
+    "parentIndex": -1,
+    "genre": "Fantasia",
+    "hasMovie": true
+  },
+  {
+    "index": 7,
+    "parentIndex": -1,
+    "genre": "Horror",
+    "hasMovie": false
+  },
+  {
+    "index": 8,
+    "parentIndex": 7,
+    "genre": "Sobrenatural",
+    "hasMovie": true
+  },
+  {
+    "index": 9,
+    "parentIndex": 7,
+    "genre": "Monstro",
+    "hasMovie": true
+  },
+  {
+    "index": 10,
+    "parentIndex": 7,
+    "genre": "Survival",
+    "hasMovie": true
+  },
+  {
+    "index": 11,
+    "parentIndex": 11,
+    "genre": "Animação",
+    "hasMovie": true
+  }
+]

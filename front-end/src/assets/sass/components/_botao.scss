@@ -1,0 +1,109 @@
+.botao {
+  margin-top: 2% !important;
+  &__salvar {
+    text-align: center;
+    width: 50%;
+    background-color: $cor-primaria !important;
+    color: #fff !important;
+    margin-bottom: 2% !important;
+    margin-left: 0 !important;
+    margin-right: 2% !important;
+    @media (min-width: $breakpoint-lg) {
+      width: 150px;
+    }
+  }
+  &__salvar:hover {
+    background-color: $cor-secundaria !important;
+  }
+  &__cancelar {
+    text-align: center;
+    width: 50%;
+    background-color: $cor-primaria-t-v !important;
+    color: #fff !important;
+    margin-bottom: 2% !important;
+    @media (min-width: $breakpoint-lg) {
+      width: 150px;
+    }
+  }
+  &__cancelar:hover {
+    background-color: $cor-secundaria-t-v !important;
+  }
+
+  &__primario {
+    margin-right: 2% !important;
+    margin-bottom: 5px !important;
+    background-color: $cor-primaria !important;
+    color: #fff !important;
+    @media (min-width: $breakpoint-lg) {
+      margin-bottom: 0 !important;
+    }
+  }
+  &__primario:hover {
+    background-color: $cor-secundaria !important;
+  }
+  &__editar {
+    margin-right: 2% !important;
+    margin-bottom: 5px !important;
+    background-color: $cor-primaria-t-a !important;
+    color: #fff !important;
+    @media (min-width: $breakpoint-lg) {
+      margin-bottom: 0 !important;
+    }
+  }
+  &__editar:hover {
+    background-color: $cor-secundaria-t-a !important;
+  }
+  &__excluir {
+    margin-right: 2% !important;
+    margin-bottom: 5px !important;
+    background-color: $cor-primaria-t-v !important;
+    color: #fff !important;
+    @media (min-width: $breakpoint-lg) {
+      margin-bottom: 0 !important;
+    }
+  }
+  &__excluir:hover {
+    background-color: $cor-secundaria-t-v !important;
+  }
+  &__confirm {
+    margin-right: 2% !important;
+    margin-bottom: 5px !important;
+    background-color: $cor-primaria-t-g !important;
+    color: #fff !important;
+    @media (min-width: $breakpoint-lg) {
+      margin-bottom: 0 !important;
+    }
+  }
+  &__confirm:hover {
+    background-color: $cor-secundaria-t-g !important;
+  }
+}
+
+.botao-adicionar {
+  background-color: $cor-primaria !important;
+  color: #fff !important;
+  &__curso {
+    width: 100% !important;
+    @media (min-width: $breakpoint-md) {
+      width: 25% !important;
+    }
+  }
+}
+.botao-adicionar:hover {
+  background-color: $cor-secundaria !important;
+}
+
+.botao-voltar {
+  background-color: $cor-primaria-t-v !important;
+  color: #fff !important;
+  margin-left: 10px !important;
+  &__curso {
+    width: 100% !important;
+    @media (min-width: $breakpoint-md) {
+      width: 25% !important;
+    }
+  }
+}
+.botao-voltar:hover {
+  background-color: $cor-secundaria-t-v !important;
+}

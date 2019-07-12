@@ -1,0 +1,21 @@
+.paper {
+  padding: 16px !important;
+  text-align: center !important;
+  color: $cor-secundaria !important;
+  // border: 1px solid $cor-primaria !important
+}
+
+.textField {
+  width: 100% !important;
+}
+
+.link {
+  text-decoration: none !important;
+}
+
+.dialogClass {
+  margin: -10%;
+  @media (min-width: $breakpoint-sm) {
+    margin: 0% !important;
+  }
+}
