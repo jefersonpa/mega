@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent } from '@material-ui/core';
-import MuiTreeView from 'material-ui-treeview';
-import MaterialTable from 'material-table';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent, Tooltip } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import MuiTreeView from "material-ui-treeview";
+import MaterialTable from "material-table";
 
 // import { notify } from "react-notify-toast";
 // import SweetAlert from "sweetalert-react";
@@ -11,7 +10,7 @@ import { Link } from 'react-router-dom';
 // import CategoriaService from "../../services/categoria-service";
 
 var categoria = [];
-const useStyles = theme => ({
+const useStyles = () => ({
   root: {
     flexGrow: 1,
     margin: 12
@@ -23,32 +22,10 @@ class Movies extends Component {
     this.state = {
       show: false,
       idToDelete: 0,
-      categorias: [],
       openModal: false,
-      categoria_descricao: '',
-      campo_descricao_error: '',
-      title: '',
-      genres2: [
-        {
-          value: 'Parent A',
-          nodes: [{ value: 'Child A' }, { value: 'Child B' }]
-        },
-        {
-          value: 'Parent B',
-          nodes: [
-            {
-              value: 'Child C'
-            },
-            {
-              value: 'Parent C',
-              nodes: [{ value: 'Child D' }, { value: 'Child E' }, { value: 'Child F' }]
-            }
-          ]
-        },
-        {
-          value: 'Parent H'
-        }
-      ],
+      categoria_descricao: "",
+      campo_descricao_error: "",
+      title: "",
       genres: [],
       titles: [],
       titles_selected: []
@@ -61,8 +38,8 @@ class Movies extends Component {
   }
 
   componentDidMount() {
-    var titles = require('../../assets/data/titles.json');
-    var all_genres = require('../../assets/data/genres.json');
+    var titles = require("../../assets/data/titles.json");
+    var all_genres = require("../../assets/data/genres.json");
 
     let genres = [];
 
@@ -75,7 +52,6 @@ class Movies extends Component {
       if (genre.parentIndex === -1 || genre.parentIndex === genre.index) {
         genre.nodes = this.populate(all_genres, genre.index);
         genres.push(genre);
-        return genre;
       }
     });
 
@@ -88,10 +64,19 @@ class Movies extends Component {
     // E verifica se o id não é igual ao pesquisado (gera erro de loop infinito util.inspect())
     const children = all_genres.filter(genre => genre.parentIndex === parentIndex && genre.parentIndex !== genre.index);
     children.forEach(child => {
-      child.nodes = this.populate(all_genres, child.id);
+      child.nodes = this.populate(all_genres, child.index);
     });
     return children;
   }
+
+  loadMovies = data => {
+    if (data.hasMovie) {
+      let titles_selected = this.state.titles.filter(title => title.genreIndex === data.index);
+      this.setState({ titles_selected });
+    } else {
+      this.setState({ titles_selected: [] });
+    }
+  };
 
   handleClickOpen = id => () => {
     // if (id != 0) {
@@ -157,19 +142,18 @@ class Movies extends Component {
     tempData.categoria_descricao = this.state.categoria_descricao;
 
     this.setState({
-      campo_descricao_error: ''
+      campo_descricao_error: ""
     });
 
-    if (this.state.categoria_descricao === '') {
+    if (this.state.categoria_descricao === "") {
       this.setState({
-        campo_descricao_error: 'Este campo é obrigatório!'
+        campo_descricao_error: "Este campo é obrigatório!"
       });
       has_error = true;
     }
 
     if (has_error) {
       //   notify.show("Confira os dados informados!", "error", 5000);
-
       return;
     }
 
@@ -214,19 +198,19 @@ class Movies extends Component {
   };
 
   render() {
-    const { categorias, categoria_descricao, campo_descricao_error, genres } = this.state;
+    const { categoria_descricao, campo_descricao_error, genres, titles_selected } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4} md={3}>
             <Paper className="paper">
-              <MuiTreeView tree={genres} style={{ padding: 0 }} />
+              <MuiTreeView tree={genres} style={{ padding: 0 }} onLeafClick={data => this.loadMovies(data)} />
             </Paper>
           </Grid>
 
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={8} md={9}>
             <Paper className="paper">
               <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                 <Button variant="contained" type="button" className="botao-adicionar" onClick={this.handleClickOpen(0)}>
@@ -242,83 +226,83 @@ class Movies extends Component {
                 }}
                 localization={{
                   pagination: {
-                    labelDisplayedRows: '{from}-{to} de {count}', // {from}-{to} of {count}
-                    labelRowsPerPage: 'Registros por página:', // Rows per page:
-                    firstAriaLabel: 'Primeira Página', // First Page
-                    firstTooltip: 'Primeira página', // First Page
-                    previousAriaLabel: 'Página Anterior', // Previous Page
-                    previousTooltip: 'Página Anterior', // Previous Page
-                    nextAriaLabel: 'Próxima Página', // Next Page
-                    nextTooltip: 'Próxima Página', // Next Page
-                    lastAriaLabel: 'Última Página', // Last Page
-                    lastTooltip: 'Última Página' // Last Page
+                    labelDisplayedRows: "{from}-{to} de {count}", // {from}-{to} of {count}
+                    labelRowsPerPage: "Registros por página:", // Rows per page:
+                    firstAriaLabel: "Primeira Página", // First Page
+                    firstTooltip: "Primeira página", // First Page
+                    previousAriaLabel: "Página Anterior", // Previous Page
+                    previousTooltip: "Página Anterior", // Previous Page
+                    nextAriaLabel: "Próxima Página", // Next Page
+                    nextTooltip: "Próxima Página", // Next Page
+                    lastAriaLabel: "Última Página", // Last Page
+                    lastTooltip: "Última Página" // Last Page
                   },
                   toolbar: {
-                    searchTooltip: 'Pesquisar' // Search
+                    searchTooltip: "Pesquisar" // Search
                   },
                   header: {
-                    actions: 'Ações' // Actions
+                    actions: "Ações" // Actions
                   },
                   body: {
-                    emptyDataSourceMessage: 'Nenhum registro disponível' // No records to display
+                    emptyDataSourceMessage: "Nenhum registro disponível" // No records to display
                   }
                 }}
                 columns={[
                   {
-                    title: 'Title',
-                    field: 'title',
+                    title: "Title",
+                    field: "title",
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: '16px' }
+                    cellStyle: { fontSize: "16px" }
                   },
                   {
-                    title: 'Plot',
-                    field: 'plot',
+                    title: "Plot",
+                    field: "plot",
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: '16px' }
+                    cellStyle: { fontSize: "16px" }
                   },
                   {
-                    title: 'Year',
-                    field: 'year',
+                    title: "Year",
+                    field: "year",
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: '16px' }
+                    cellStyle: { fontSize: "16px" }
                   },
                   {
-                    title: 'Actions',
-                    field: 'actions',
+                    title: "Actions",
+                    field: "actions",
                     headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: '16px' }
+                    cellStyle: { fontSize: "16px" }
                   }
                 ]}
-                data={categorias.map(item => {
+                data={titles_selected.map(item => {
                   return {
                     title: item.title,
-                    plot: item.plot,
+                    plot: (
+                      <Tooltip title={item.plot} aria-label="Plot">
+                        <div>{item.plot.length > 30 ? item.plot.substring(0, 30) + "..." : item.plot}</div>
+                      </Tooltip>
+                    ),
+
                     year: item.year,
                     actions: (
                       <>
                         <Button
                           variant="contained"
                           type="button"
-                          title={'Editar'}
-                          className={'botao__editar'}
+                          title={"Editar"}
+                          className={"botao__editar"}
                           onClick={this.handleClickOpen(item.categoria_id)}
                         >
                           <Icon>edit</Icon>
                         </Button>
 
                         <Button
-                          title={'Deletar'}
-                          className={'botao__excluir'}
+                          title={"Deletar"}
+                          className={"botao__excluir"}
                           variant="contained"
                           onClick={this.handleExcluirClick(item.categoria_id)}
                         >
                           <Icon>delete</Icon>
                         </Button>
-                        <Link className="link" to={'/dashboard/subcategorias/' + item.categoria_id}>
-                          <Button title={'Subcategorias'} className={'botao__primario'} variant="contained">
-                            <Icon>list</Icon>
-                          </Button>
-                        </Link>
                       </>
                     )
                   };
@@ -344,7 +328,7 @@ class Movies extends Component {
                   <Grid item xs={12}>
                     <h1>Categoria</h1>
                   </Grid>
-                  <Grid container spacing={16} direction={'row'}>
+                  <Grid container spacing={16} direction={"row"}>
                     <Grid item xs={12}>
                       <TextField
                         id="outlined-descricao"
@@ -354,11 +338,11 @@ class Movies extends Component {
                         variant="outlined"
                         value={categoria_descricao}
                         helperText={campo_descricao_error}
-                        error={campo_descricao_error === '' ? false : true}
+                        error={campo_descricao_error === "" ? false : true}
                         required={true}
                         name="categoria_descricao"
                         onChange={event => {
-                          this.handleChange('categoria_descricao', event.target.value);
+                          this.handleChange("categoria_descricao", event.target.value);
                         }}
                       />
                     </Grid>
@@ -369,7 +353,7 @@ class Movies extends Component {
                           color="primary"
                           type="button"
                           variant="contained"
-                          className={'botao__salvar'}
+                          className={"botao__salvar"}
                           onClick={this.onClick}
                         >
                           <i className="material-icons">done</i> Salvar
@@ -379,7 +363,7 @@ class Movies extends Component {
                           color="primary"
                           type="button"
                           variant="contained"
-                          className={'botao__cancelar'}
+                          className={"botao__cancelar"}
                           onClick={this.onClickCancel}
                         >
                           <i className="material-icons">exit_to_app</i> Cancelar
