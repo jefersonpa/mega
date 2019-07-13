@@ -1,61 +1,83 @@
 import React, { Component } from "react";
-import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent, Tooltip, Slide } from "@material-ui/core";
 import MuiTreeView from "material-ui-treeview";
 import MaterialTable from "material-table";
+import SweetAlert from "sweetalert-react";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
-// import { notify } from "react-notify-toast";
-// import SweetAlert from "sweetalert-react";
+import { TABLE_PT, STORAGE_GENRES_DATA, STORAGE_TITLES_DATA } from "../../shared/environment.js";
+import MoviesService from "../../services/movies-services";
 
-// import CategoriaService from "../../services/categoria-service";
-
-var categoria = [];
-const useStyles = () => ({
-  root: {
-    flexGrow: 1,
-    margin: 12
-  }
+const styles = () => ({
+  selected: {
+    borderTop: "1px solid #ddd",
+    height: 50
+  },
+  focusVisible: {},
+  gutters: {}
+});
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 class Movies extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
-      idToDelete: 0,
-      openModal: false,
-      categoria_descricao: "",
-      campo_descricao_error: "",
-      title: "",
       genres: [],
-      titles: [],
-      titles_selected: []
+      all_titles: [],
+      titles_selected: [],
+      genre_selected: null,
+      title_selected: {},
+      show_swal: false,
+      open_modal: false,
+      index: 0,
+      title: "",
+      title_error: "",
+      plot: "",
+      plot_error: "",
+      year: 0,
+      year_error: ""
     };
 
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.handleExcluirClick = this.handleExcluirClick.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.notificationDOMRef = React.createRef();
   }
 
   componentDidMount() {
-    var titles = require("../../assets/data/titles.json");
-    var all_genres = require("../../assets/data/genres.json");
+    var all_genres = this.loadData(STORAGE_GENRES_DATA); // Carrega os gêneros
+    var all_titles = this.loadData(STORAGE_TITLES_DATA); // Carrega os títulos
+    let genres = this.loadTree(all_genres); // Carrega os dados com o formato do material-ui-treeview
+    this.setState({ genres, all_titles });
+  }
 
+  loadData(item_name) {
+    // Carrega da storage
+    var data = MoviesService.getStorageData(item_name);
+    // Se não houver dados salvos, pega do arquivo json e salva na storage
+    if (data == null) {
+      data = item_name === STORAGE_GENRES_DATA ? require("../../assets/data/genres.json") : require("../../assets/data/titles.json");
+      MoviesService.setStorageData(data, item_name);
+    }
+    return data;
+  }
+
+  loadTree(all_genres) {
     let genres = [];
 
     for (let i = 0; i < all_genres.length; i++) {
+      // Cria o campo value, necessário no treeview
       all_genres[i].value = all_genres[i].genre;
     }
 
     all_genres.forEach(genre => {
-      // filtra os do começo da árvore
+      // filtra apenas os do começo da árvore
       if (genre.parentIndex === -1 || genre.parentIndex === genre.index) {
         genre.nodes = this.populate(all_genres, genre.index);
         genres.push(genre);
       }
     });
-
-    this.setState({ genres, titles });
+    return genres;
   }
 
   // Função recursiva para popular o tree
@@ -71,57 +93,52 @@ class Movies extends Component {
 
   loadMovies = data => {
     if (data.hasMovie) {
-      let titles_selected = this.state.titles.filter(title => title.genreIndex === data.index);
-      this.setState({ titles_selected });
+      let titles_selected = this.state.all_titles.filter(title => title.genreIndex === data.index);
+      this.setState({ titles_selected, genre_selected: data });
     } else {
-      this.setState({ titles_selected: [] });
+      this.setState({ titles_selected: [], genre_selected: null });
     }
   };
 
-  handleClickOpen = id => () => {
-    // if (id != 0) {
-    //   this.setState({
-    //     title: "Editar"
-    //   });
-    //   CategoriaService.getById(
-    //     id,
-    //     output => {
-    //       categoria = output;
-    //       this.setState({ categoria_descricao: categoria.categoria_descricao });
-    //     },
-    //     err => {
-    //       notify.show(err, "error", 5000);
-    //     }
-    //   );
-    // } else {
-    //   categoria = [];
-    //   this.setState({ categoria_descricao: "" });
-    // }
-    // this.setState({ openModal: true });
-  };
-
-  handleExcluirClick = categoria_id => () => {
-    this.setState({
-      show: true,
-      idToDelete: categoria_id
-    });
+  handleClickOpenModal = item => {
+    if (item !== null) {
+      // Editar
+      this.setState({
+        open_modal: true,
+        index: item.index,
+        genreIndex: item.genreIndex,
+        title: item.title,
+        plot: item.plot,
+        year: item.year,
+        title_error: "",
+        plot_error: "",
+        year_error: ""
+      });
+    } else {
+      // Adicionar
+      this.setState({
+        open_modal: true,
+        index: 0,
+        genreIndex: this.state.genre_selected.index,
+        title: "",
+        plot: "",
+        year: 0,
+        title_error: "",
+        plot_error: "",
+        year_error: ""
+      });
+    }
   };
 
   onDelete() {
-    // CategoriaService.delete(
-    //   this.state.idToDelete,
-    //   () => {
-    //     this.setState({
-    //       categorias: this.state.categorias.filter(
-    //         u => u.categoria_id !== this.state.idToDelete
-    //       )
-    //     });
-    //     notify.show("Dado excluido com sucesso!", "success", 5000);
-    //   },
-    //   error => {
-    //     notify.show(error, "error", 5000);
-    //   }
-    // );
+    const { index, all_titles, genre_selected } = this.state;
+
+    // Todos os titulos menos o deletado
+    let new_titles = all_titles.filter(titles => titles.index !== index);
+    this.setState({ all_titles: new_titles });
+
+    this.loadMovies(genre_selected); // Atualiza o state dos filmes selecionados
+    MoviesService.setStorageData(new_titles, STORAGE_TITLES_DATA); // Atualiza a storage
   }
 
   handleChange = (key, value) => {
@@ -129,220 +146,170 @@ class Movies extends Component {
       [key]: value
     });
   };
-  onClickCancel = () => {
-    this.setState({
-      openModal: false
-    });
-  };
 
-  onClick = () => {
+  onSave = () => {
     let has_error = false;
-    let tempData = [];
-    tempData.categoria_id = categoria.categoria_id;
-    tempData.categoria_descricao = this.state.categoria_descricao;
+    let data = {};
+    data.index = this.state.index;
+    data.genreIndex = this.state.genreIndex;
+    data.title = this.state.title;
+    data.plot = this.state.plot;
+    data.year = this.state.year;
 
     this.setState({
-      campo_descricao_error: ""
+      title_error: "",
+      plot_error: "",
+      year_error: ""
     });
 
-    if (this.state.categoria_descricao === "") {
+    if (data.title === "") {
       this.setState({
-        campo_descricao_error: "Este campo é obrigatório!"
+        title_error: "Este campo é obrigatório!"
+      });
+      has_error = true;
+    }
+
+    if (data.plot === "") {
+      this.setState({
+        plot_error: "Este campo é obrigatório!"
+      });
+      has_error = true;
+    }
+
+    if (data.year === 0) {
+      this.setState({
+        year_error: "Este campo é obrigatório!"
+      });
+      has_error = true;
+    }
+
+    let today = new Date();
+
+    if (data.year < 1800 || data.year > today.getFullYear()) {
+      this.setState({
+        year_error: "O ano do livro deve estar entre 1800 e " + today.getFullYear() + "!"
       });
       has_error = true;
     }
 
     if (has_error) {
-      //   notify.show("Confira os dados informados!", "error", 5000);
+      this.notificationDOMRef.current.addNotification({
+        title: "Erro",
+        message: "Confira os dados informados!",
+        type: "danger",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: { duration: 2000 },
+        dismissable: { click: true }
+      });
       return;
     }
 
-    if (tempData.categoria_id === undefined) {
-      //   CategoriaService.save(
-      //     tempData,
-      //     res => {
-      //       tempData.categoria_id = res.categoria_id;
-      //       let tmp = this.state.categorias;
-      //       tmp.push(tempData);
-      //       this.setState({
-      //         categorias: tmp
-      //       });
-      //       notify.show("Dados salvos com sucesso!", "success", 5000);
-      //       this.onClickCancel();
-      //     },
-      //     err => {
-      //       notify.show(err, "error", 5000);
-      //     }
-      //   );
+    let tmp = this.state.all_titles;
+    if (data.index === 0) {
+      let max_id = Math.max(...tmp.map(x => x.index)) + 1; // Pega o maior id + 1
+      data.index = max_id;
+      tmp.push(data);
     } else {
-      //   CategoriaService.update(
-      //     tempData,
-      //     () => {
-      //       let tmp = this.state.categorias;
-      //       for (let i = 0; i < tmp.length; i++) {
-      //         if (tmp[i].categoria_id == tempData.categoria_id) {
-      //           tmp[i] = tempData;
-      //         }
-      //       }
-      //       this.setState({
-      //         categorias: tmp
-      //       });
-      //       notify.show("Dados atualizados com sucesso!", "success", 5000);
-      //       this.onClickCancel();
-      //     },
-      //     err => {
-      //       notify.show(err, "error", 5000);
-      //     }
-      //   );
+      for (let i = 0; i < tmp.length; i++) {
+        if (tmp[i].index === data.index) {
+          tmp[i] = data;
+          break;
+        }
+      }
     }
+
+    this.setState({ all_titles: tmp, open_modal: false });
+    this.loadMovies(this.state.genre_selected); // Atualiza o state dos filmes selecionados
+    MoviesService.setStorageData(tmp, STORAGE_TITLES_DATA); // Atualiza a storage
+    this.notificationDOMRef.current.addNotification({
+      title: "Sucesso!",
+      message: "Dados salvos com sucesso!",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: { duration: 2000 },
+      dismissable: { click: true }
+    });
   };
 
   render() {
-    const { categoria_descricao, campo_descricao_error, genres, titles_selected } = this.state;
+    const { title, title_error, plot, plot_error, year, year_error, genre_selected, titles_selected, genres } = this.state;
     const { classes } = this.props;
 
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4} md={3}>
-            <Paper className="paper">
-              <MuiTreeView tree={genres} style={{ padding: 0 }} onLeafClick={data => this.loadMovies(data)} />
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} sm={8} md={9}>
-            <Paper className="paper">
-              <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                <Button variant="contained" type="button" className="botao-adicionar" onClick={this.handleClickOpen(0)}>
-                  Adicionar
-                </Button>
-              </Grid>
-
-              <br />
-              <MaterialTable
-                options={{
-                  pageSize: 10,
-                  pageSizeOptions: [10, 20, 30]
-                }}
-                localization={{
-                  pagination: {
-                    labelDisplayedRows: "{from}-{to} de {count}", // {from}-{to} of {count}
-                    labelRowsPerPage: "Registros por página:", // Rows per page:
-                    firstAriaLabel: "Primeira Página", // First Page
-                    firstTooltip: "Primeira página", // First Page
-                    previousAriaLabel: "Página Anterior", // Previous Page
-                    previousTooltip: "Página Anterior", // Previous Page
-                    nextAriaLabel: "Próxima Página", // Next Page
-                    nextTooltip: "Próxima Página", // Next Page
-                    lastAriaLabel: "Última Página", // Last Page
-                    lastTooltip: "Última Página" // Last Page
-                  },
-                  toolbar: {
-                    searchTooltip: "Pesquisar" // Search
-                  },
-                  header: {
-                    actions: "Ações" // Actions
-                  },
-                  body: {
-                    emptyDataSourceMessage: "Nenhum registro disponível" // No records to display
-                  }
-                }}
-                columns={[
-                  {
-                    title: "Title",
-                    field: "title",
-                    headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
-                  },
-                  {
-                    title: "Plot",
-                    field: "plot",
-                    headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
-                  },
-                  {
-                    title: "Year",
-                    field: "year",
-                    headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
-                  },
-                  {
-                    title: "Actions",
-                    field: "actions",
-                    headerStyle: { fontSize: 16 },
-                    cellStyle: { fontSize: "16px" }
-                  }
-                ]}
-                data={titles_selected.map(item => {
-                  return {
-                    title: item.title,
-                    plot: (
-                      <Tooltip title={item.plot} aria-label="Plot">
-                        <div>{item.plot.length > 30 ? item.plot.substring(0, 30) + "..." : item.plot}</div>
-                      </Tooltip>
-                    ),
-
-                    year: item.year,
-                    actions: (
-                      <>
-                        <Button
-                          variant="contained"
-                          type="button"
-                          title={"Editar"}
-                          className={"botao__editar"}
-                          onClick={this.handleClickOpen(item.categoria_id)}
-                        >
-                          <Icon>edit</Icon>
-                        </Button>
-
-                        <Button
-                          title={"Deletar"}
-                          className={"botao__excluir"}
-                          variant="contained"
-                          onClick={this.handleExcluirClick(item.categoria_id)}
-                        >
-                          <Icon>delete</Icon>
-                        </Button>
-                      </>
-                    )
-                  };
-                })}
-                title="MOVIES"
-              />
-            </Paper>
-          </Grid>
-        </Grid>
-
+    const dialog = () => {
+      return (
         <Dialog
-          open={this.state.openModal}
-          onClose={() => this.setState({ openModal: false })}
+          open={this.state.open_modal}
+          TransitionComponent={Transition}
+          onClose={() => this.setState({ open_modal: false })}
           scroll={this.state.scroll}
           aria-labelledby="scroll-dialog-title"
           maxWidth="md"
           className="dialogClass"
         >
-          <DialogContent>
-            <Grid container spacing={16} direction="row">
+          <DialogContent style={{ padding: 16 }}>
+            <Grid container direction="row">
               <Grid item xs={12}>
                 <Paper className="paper">
                   <Grid item xs={12}>
-                    <h1>Categoria</h1>
+                    <h1>Movie</h1>
                   </Grid>
-                  <Grid container spacing={16} direction={"row"}>
+                  <Grid container direction={"row"}>
                     <Grid item xs={12}>
                       <TextField
-                        id="outlined-descricao"
-                        label="Descrição"
+                        id="outlined-title"
+                        label="Title"
                         className="textField"
                         margin="normal"
                         variant="outlined"
-                        value={categoria_descricao}
-                        helperText={campo_descricao_error}
-                        error={campo_descricao_error === "" ? false : true}
+                        value={title}
+                        helperText={title_error}
+                        error={title_error === "" ? false : true}
                         required={true}
-                        name="categoria_descricao"
+                        name="title"
                         onChange={event => {
-                          this.handleChange("categoria_descricao", event.target.value);
+                          this.handleChange("title", event.target.value);
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="outlined-plot"
+                        label="Plot"
+                        multiline
+                        rows="4"
+                        className="textField"
+                        margin="normal"
+                        variant="outlined"
+                        value={plot}
+                        helperText={plot_error}
+                        error={plot_error === "" ? false : true}
+                        required={true}
+                        name="plot"
+                        onChange={event => {
+                          this.handleChange("plot", event.target.value);
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="outlined-year"
+                        label="Year"
+                        className="textField"
+                        margin="normal"
+                        variant="outlined"
+                        value={year}
+                        helperText={year_error}
+                        error={year_error === "" ? false : true}
+                        required={true}
+                        name="year"
+                        onChange={event => {
+                          this.handleChange("year", event.target.value);
                         }}
                       />
                     </Grid>
@@ -354,9 +321,9 @@ class Movies extends Component {
                           type="button"
                           variant="contained"
                           className={"botao__salvar"}
-                          onClick={this.onClick}
+                          onClick={this.onSave}
                         >
-                          <i className="material-icons">done</i> Salvar
+                          <Icon>done</Icon> Salvar
                         </Button>
                         <Button
                           title="Cancelar"
@@ -364,9 +331,13 @@ class Movies extends Component {
                           type="button"
                           variant="contained"
                           className={"botao__cancelar"}
-                          onClick={this.onClickCancel}
+                          onClick={() =>
+                            this.setState({
+                              open_modal: false
+                            })
+                          }
                         >
-                          <i className="material-icons">exit_to_app</i> Cancelar
+                          <Icon>exit_to_app</Icon> Cancelar
                         </Button>
                       </Grid>
                     </Grid>
@@ -376,23 +347,142 @@ class Movies extends Component {
             </Grid>
           </DialogContent>
         </Dialog>
+      );
+    };
 
-        {/* <SweetAlert
-          show={this.state.show}
+    const sweetAlert = () => {
+      return (
+        <SweetAlert
+          show={this.state.show_swal}
           title="Excluir"
-          html
           showCancelButton={true}
-          type={"error"}
-          text={"Você tem certeza que deseja excluir este registro?"}
+          cancelButtonText="Cancelar"
+          type="error"
+          text="Você tem certeza que deseja excluir este registro?"
           onConfirm={() => {
-            this.setState({ show: false });
+            this.setState({ show_swal: false });
             this.onDelete();
           }}
-          onCancel={() => this.setState({ show: false })}
-        /> */}
+          onCancel={() => this.setState({ show_swal: false })}
+        />
+      );
+    };
+
+    const materialTable = () => {
+      return (
+        <MaterialTable
+          options={{
+            pageSize: 10,
+            pageSizeOptions: [10, 20, 30]
+          }}
+          localization={TABLE_PT}
+          columns={[
+            {
+              title: "Title",
+              field: "title",
+              headerStyle: { fontSize: 16 },
+              cellStyle: { fontSize: 16 }
+            },
+            {
+              title: "Plot",
+              field: "plot",
+              headerStyle: { fontSize: 16 },
+              cellStyle: { fontSize: 16 }
+            },
+            {
+              title: "Year",
+              field: "year",
+              headerStyle: { fontSize: 16 },
+              cellStyle: { fontSize: 16 }
+            },
+            {
+              title: "Actions",
+              field: "actions",
+              headerStyle: { fontSize: 16, minWidth: 135 },
+              cellStyle: { fontSize: 16, minWidth: 135 }
+            }
+          ]}
+          data={titles_selected.map(item => {
+            return {
+              title: item.title,
+              plot: (
+                <Tooltip title={item.plot} aria-label="Plot">
+                  <div className="tableEllipsis">{item.plot}</div>
+                </Tooltip>
+              ),
+              year: item.year,
+              actions: (
+                <>
+                  <Button
+                    variant="contained"
+                    type="button"
+                    title={"Editar"}
+                    className={"botao__editar"}
+                    onClick={() => this.handleClickOpenModal(item)}
+                  >
+                    <Icon>edit</Icon>
+                  </Button>
+
+                  <Button
+                    title={"Deletar"}
+                    className={"botao__excluir"}
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        show_swal: true,
+                        index: item.index
+                      })
+                    }
+                  >
+                    <Icon>delete</Icon>
+                  </Button>
+                </>
+              )
+            };
+          })}
+          title={genre_selected ? "MOVIES - " + genre_selected.genre.toUpperCase() : "MOVIES"}
+        />
+      );
+    };
+
+    return (
+      <div className="root">
+        <ReactNotification ref={this.notificationDOMRef} />
+        {dialog()}
+        {sweetAlert()}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4} md={3}>
+            <Paper className="paper">
+              <MuiTreeView
+                listItemProps={{ className: classes.selected }}
+                tree={genres}
+                style={{ padding: 0 }}
+                onLeafClick={data => this.loadMovies(data)}
+              />
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12} sm={8} md={9}>
+            <Paper className="paper">
+              {genre_selected ? (
+                <>
+                  <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                    <Button variant="contained" type="button" className="botao__adicionar" onClick={() => this.handleClickOpenModal(null)}>
+                      Adicionar
+                    </Button>
+                  </Grid>
+                  <br />
+                </>
+              ) : (
+                <></>
+              )}
+              {materialTable()}
+            </Paper>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
 
-export default withStyles(useStyles)(Movies);
+export default withStyles(styles)(Movies);

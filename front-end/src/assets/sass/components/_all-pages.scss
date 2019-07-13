@@ -1,8 +1,7 @@
 .paper {
   padding: 16px !important;
   text-align: center !important;
-  // color: $cor-secundaria !important;
-  // border: 1px solid $cor-primaria !important
+  border: 1px solid $cor-primaria !important;
 }
 
 .textField {
@@ -14,8 +13,14 @@
 }
 
 .dialogClass {
-  margin: -10%;
+  margin-left: -10% !important;
+  margin-right: -10% !important;
   @media (min-width: $breakpoint-sm) {
     margin: 0% !important;
   }
+}
+
+.root {
+  flex-grow: 1 !important;
+  margin: 12px !important;
 }

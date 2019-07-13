@@ -1,9 +1,0 @@
-.avatar{
-    margin-left: 100%;
-    @media(min-width: $breakpoint-md){
-        margin-left: 95%;
-    }
-    @media(max-width: $breakpoint-sm){
-        display: none;
-    }
-}
