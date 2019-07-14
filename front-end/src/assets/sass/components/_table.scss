@@ -1,5 +1,6 @@
 .tableEllipsis {
   white-space: nowrap;
+  -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   width: 200px;
   display: block;

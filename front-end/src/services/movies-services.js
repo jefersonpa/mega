@@ -5,15 +5,14 @@ const iv = CryptoJS.enc.Base64.parse("lsddmlslblw9dlwldkwn23$3rflswekn");
 
 const MoviesService = {
   setStorageData(data, item_name) {
-    const usuario = data;
-    let encrypted = CryptoJS.AES.encrypt(JSON.stringify(usuario), base64Key, { iv: iv });
+    let encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), base64Key, { iv: iv });
     localStorage.setItem(item_name, encrypted.toString());
   },
   getStorageData(item_name) {
-    const usuario = localStorage.getItem(item_name);
+    const item = localStorage.getItem(item_name);
 
-    if (usuario == null) return null;
-    let decrypted = CryptoJS.AES.decrypt(usuario, base64Key, { iv: iv });
+    if (item == null) return null;
+    let decrypted = CryptoJS.AES.decrypt(item, base64Key, { iv: iv });
     let descrString = decrypted.toString(CryptoJS.enc.Utf8);
     let data = JSON.parse(descrString);
     return data;

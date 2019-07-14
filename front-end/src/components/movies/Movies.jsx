@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import { Paper, Button, Grid, TextField, Icon, Dialog, DialogContent, Tooltip, Slide } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import MuiTreeView from "material-ui-treeview";
 import MaterialTable from "material-table";
 import SweetAlert from "sweetalert-react";
@@ -12,11 +12,17 @@ import MoviesService from "../../services/movies-services";
 
 const styles = () => ({
   selected: {
+    "&:focus": {
+      backgroundColor: "#ddd"
+    },
+    "&:hover": {
+      backgroundColor: "#ddd"
+    },
     borderTop: "1px solid #ddd",
     height: 50
   },
   focusVisible: {},
-  gutters: {}
+  divider: {}
 });
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -45,18 +51,27 @@ class Movies extends Component {
   }
 
   componentDidMount() {
-    var all_genres = this.loadData(STORAGE_GENRES_DATA); // Carrega os gêneros
-    var all_titles = this.loadData(STORAGE_TITLES_DATA); // Carrega os títulos
-    let genres = this.loadTree(all_genres); // Carrega os dados com o formato do material-ui-treeview
-    this.setState({ genres, all_titles });
+    this.loadData();
   }
 
-  loadData(item_name) {
+  loadData() {
+    var all_genres = this.loadItemData(STORAGE_GENRES_DATA); // Carrega os gêneros
+    var all_titles = this.loadItemData(STORAGE_TITLES_DATA); // Carrega os títulos
+    let genres = this.loadTree(all_genres); // Carrega os dados com o formato do material-ui-treeview
+    this.setState({ genres, all_titles, titles_selected: [], genre_selected: null, title_selected: {} });
+  }
+
+  loadItemData(item_name) {
     // Carrega da storage
     var data = MoviesService.getStorageData(item_name);
     // Se não houver dados salvos, pega do arquivo json e salva na storage
     if (data == null) {
-      data = item_name === STORAGE_GENRES_DATA ? require("../../assets/data/genres.json") : require("../../assets/data/titles.json");
+      // Copia um array para outro sem criar uma referência
+      data = JSON.parse(
+        JSON.stringify(
+          item_name === STORAGE_GENRES_DATA ? require("../../assets/data/genres.json") : require("../../assets/data/titles.json")
+        )
+      );
       MoviesService.setStorageData(data, item_name);
     }
     return data;
@@ -147,6 +162,24 @@ class Movies extends Component {
     });
   };
 
+  clear = () => {
+    MoviesService.clearStorageData(STORAGE_GENRES_DATA);
+    MoviesService.clearStorageData(STORAGE_TITLES_DATA);
+    this.loadData();
+
+    this.notificationDOMRef.current.addNotification({
+      title: "Sucesso!",
+      message: "Dados limpos com sucesso!",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: { duration: 2000 },
+      dismissable: { click: true }
+    });
+  };
+
   onSave = () => {
     let has_error = false;
     let data = {};
@@ -154,7 +187,7 @@ class Movies extends Component {
     data.genreIndex = this.state.genreIndex;
     data.title = this.state.title;
     data.plot = this.state.plot;
-    data.year = this.state.year;
+    data.year = this.state.year * 1;
 
     this.setState({
       title_error: "",
@@ -184,8 +217,7 @@ class Movies extends Component {
     }
 
     let today = new Date();
-
-    if (data.year < 1800 || data.year > today.getFullYear()) {
+    if (data.year < 1800 || data.year > today.getFullYear() || !Number.isInteger(data.year)) {
       this.setState({
         year_error: "O ano do livro deve estar entre 1800 e " + today.getFullYear() + "!"
       });
@@ -460,6 +492,14 @@ class Movies extends Component {
                 onLeafClick={data => this.loadMovies(data)}
               />
             </Paper>
+            <br />
+            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+              <Tooltip title={"Apaga os dados da storage e carrega os do arquivo JSON"} aria-label="Clear">
+                <Button variant="contained" type="button" name="Limpar Storage" className="botao__excluir" onClick={() => this.clear()}>
+                  Limpar local storage
+                </Button>
+              </Tooltip>
+            </Grid>
           </Grid>
 
           <Grid item xs={12} sm={8} md={9}>

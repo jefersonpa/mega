@@ -21,6 +21,13 @@
 }
 
 .root {
+  -webkit-box-flex: 1 !important;
+  -ms-flex-positive: 1 !important;
   flex-grow: 1 !important;
   margin: 12px !important;
+}
+
+.MuiExpansionPanel-root.Mui-expanded {
+  margin: 0 !important;
+  border-top: 1px solid #ddd;
 }
