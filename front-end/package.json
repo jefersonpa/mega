@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.2.0",
-    "crypto-js": "^3.1.9-1",
+    "crypto-js": "^4.2.0",
     "material-table": "^1.40.1",
     "material-ui-treeview": "^3.3.0",
     "react": "^16.8.6",
